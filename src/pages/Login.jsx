@@ -1,78 +1,92 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import usuariosData from "../data/usuarios.json";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore"; // 👈 agregado setDoc
+import { auth, db } from "../libs/firebase";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Hook para navegar
+  const navigate = useNavigate();
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const usuario = usuariosData.find(
-    (u) => u.email === email && u.password === password
-  );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-if (usuario) {
-  setError("");
+    try {
+      console.log("email:", email);
+      console.log("password:", password);
 
-  // Guardamos el ID en localStorage
-  localStorage.setItem("usuarioId", usuario.id);
+      // 🔐 Login con Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-  if (usuario.role === "admin") {
-    navigate("/panelAdmin");
-  } else {
-    navigate("/panelAlumno", { state: { usuario } });
-  }
-} else {
-  setError("Email o contraseña incorrectos");
-}
-};
+      // 🔎 Obtener datos del usuario desde Firestore
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        // ✅ Si existe el documento, uso sus datos
+        const userData = userDocSnap.data();
+
+        localStorage.setItem("usuarioId", user.uid);
+        localStorage.setItem("usuarioRol", userData.rol);
+
+        if (userData.rol === "admin") {
+          navigate("/panelAdmin");
+        } else {
+          navigate("/panelAlumno");
+        }
+      } else {
+        // ⚡ Si no existe el documento, lo creo con datos mínimos
+        await setDoc(userDocRef, {
+          email: user.email,
+          rol: "alumno",
+        });
+
+        localStorage.setItem("usuarioId", user.uid);
+        localStorage.setItem("usuarioRol", "alumno");
+
+        navigate("/panelAlumno");
+      }
+    } catch (err) {
+      console.error("Error de inicio de sesión:", err);
+      setError("Credenciales incorrectas o usuario no registrado.");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-96">
+        className="bg-white p-8 rounded-lg shadow-md w-96"
+      >
         <h2 className="text-2xl font-semibold mb-4">Sign in</h2>
-        <p className="mb-6 text-sm text-gray-500">
-          Don’t have an account?{" "}
-          <a href="#" className="text-blue-600">
-            Get started
-          </a>
-        </p>
 
         <label className="block mb-2 text-gray-700">Email address</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none"
           required
         />
 
-        <div className="mb-4">
-          <div className="flex justify-between items-center">
-            <label className="text-gray-700">Password</label>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-800">
-              Forgot password?
-            </a>
-          </div>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
+        <label className="block mb-2 text-gray-700">Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none"
+          required
+        />
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
 
         <button
           type="submit"
-          className="w-full bg-gray-900 text-white p-2 rounded hover:bg-black transition-colors">
+          className="w-full mt-4 bg-gray-900 text-white p-2 rounded hover:bg-black"
+        >
           Sign in
         </button>
       </form>
@@ -80,4 +94,4 @@ if (usuario) {
   );
 }
 
-export default Login
+export default Login;

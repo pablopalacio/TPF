@@ -1,23 +1,59 @@
 import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../libs/firebase";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Tabla from "../components/Tabla";
-import CrearUsuarioCard from "../components/CrearUsuarioCard"; // lo crearemos
-import FiltroHorario from "../components/FiltroHorario"; // lo crearemos
+import CrearUsuarioCard from "../components/CrearUsuarioCard";
+import FiltroHorario from "../components/FiltroHorario";
 
 function PanelAdmin() {
   const [vista, setVista] = useState("alumnos");
   const [mostrarCrearUsuario, setMostrarCrearUsuario] = useState(false);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState(null);
-
-  // Suponiendo que obtienes al usuario de localStorage:
   const [nombreUsuario, setNombreUsuario] = useState("");
+  const [usuarios, setUsuarios] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
+  // Obtener nombre del admin
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-    if (usuario?.nombre) {
-      setNombreUsuario(usuario.nombre.split(" ")[0]); // primer nombre
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setCargando(false);
+        return;
+      }
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setNombreUsuario(data.nombre?.split(" ")[0] || "");
+        }
+      } catch (err) {
+        console.error("Error al obtener usuario admin:", err);
+      } finally {
+        setCargando(false);
+      }
+    });
+
+    return () => unsub();
+  }, []);
+
+  // Función para cargar usuarios
+  const loadUsers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const usersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setUsuarios(usersData);
+    } catch (err) {
+      console.error("Error al cargar usuarios:", err);
     }
+  };
+
+  // Cargar usuarios al iniciar
+  useEffect(() => {
+    loadUsers();
   }, []);
 
   const handleCrearUsuario = () => {
@@ -30,6 +66,10 @@ function PanelAdmin() {
     setVista("alumnos");
   };
 
+  if (cargando) {
+    return <p className="text-center mt-10">Cargando...</p>;
+  }
+
   return (
     <div className="min-h-screen bg-pink-500 flex">
       {/* Aside fijo */}
@@ -40,12 +80,14 @@ function PanelAdmin() {
         <nav className="flex flex-col p-4 gap-2 mt-2">
           <button
             onClick={() => setVista("alumnos")}
-            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded">
+            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded"
+          >
             Alumnos
           </button>
           <button
             onClick={handleCrearUsuario}
-            className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded">
+            className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded"
+          >
             Crear Usuario
           </button>
         </nav>
@@ -53,7 +95,6 @@ function PanelAdmin() {
 
       {/* Contenido Principal */}
       <div className="flex-1 ml-64">
-        {/* Header */}
         <Header />
 
         <main className="p-6">
@@ -61,19 +102,22 @@ function PanelAdmin() {
             Bienvenido/a, {nombreUsuario}
           </h1>
 
-          {/* Mostrar vista de alumnos */}
+          {/* Vista de alumnos */}
           {vista === "alumnos" && (
             <>
               <FiltroHorario
                 onChange={(hora) => setHorarioSeleccionado(hora)}
               />
-              <Tabla tipo="alumnos" horario={horarioSeleccionado} />
+              <Tabla tipo="alumnos" horario={horarioSeleccionado} usuarios={usuarios} />
             </>
           )}
 
-          {/* Mostrar formulario de creación */}
+          {/* Vista de creación de usuario */}
           {vista === "crear" && mostrarCrearUsuario && (
-            <CrearUsuarioCard onCancel={handleCancelarCrear} />
+            <CrearUsuarioCard
+              onCancel={handleCancelarCrear}
+              refreshUsers={loadUsers} // 👈 pasa la función de refresco
+            />
           )}
         </main>
 

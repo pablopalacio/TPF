@@ -1,0 +1,144 @@
+{
+  "ejercicios": [
+    {
+      "id": 1,
+      "nombre": "Thruster",
+      "tipo": "ejercicio",
+      "descripcion": "Sentadilla frontal seguida de press de hombros en un solo movimiento.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 2,
+      "nombre": "Clean & Jerk",
+      "tipo": "ejercicio",
+      "descripcion": "Levantamiento olímpico en dos fases: cargada al pecho y envión sobre la cabeza.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 3,
+      "nombre": "Snatch",
+      "tipo": "ejercicio",
+      "descripcion": "Levantamiento olímpico de barra desde el suelo directo sobre la cabeza en un solo movimiento.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 4,
+      "nombre": "Deadlift",
+      "tipo": "ejercicio",
+      "descripcion": "Levantamiento de peso muerto desde el suelo hasta la cadera.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 5,
+      "nombre": "Front Squat",
+      "tipo": "ejercicio",
+      "descripcion": "Sentadilla con la barra al frente sobre los hombros.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 6,
+      "nombre": "Back Squat",
+      "tipo": "ejercicio",
+      "descripcion": "Sentadilla con la barra sobre los trapecios.",
+      "categoria": "levantamiento"
+    },
+    {
+      "id": 7,
+      "nombre": "Pull-up",
+      "tipo": "ejercicio",
+      "descripcion": "Dominada estricta desde extensión completa de brazos hasta la barbilla sobre la barra.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 8,
+      "nombre": "Muscle-up",
+      "tipo": "ejercicio",
+      "descripcion": "Dominada en anillas o barra que termina con empuje por encima del aparato.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 9,
+      "nombre": "Handstand Push-up",
+      "tipo": "ejercicio",
+      "descripcion": "Flexión de brazos parada de manos.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 10,
+      "nombre": "Double Under",
+      "tipo": "ejercicio",
+      "descripcion": "Salto de soga en el que la cuerda pasa dos veces por debajo de los pies en un salto.",
+      "categoria": "cardio"
+    },
+    {
+      "id": 11,
+      "nombre": "Box Jump",
+      "tipo": "ejercicio",
+      "descripcion": "Salto desde el suelo a una caja o plataforma.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 12,
+      "nombre": "Burpee",
+      "tipo": "ejercicio",
+      "descripcion": "Flexión de pecho seguida de un salto vertical.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 13,
+      "nombre": "Row",
+      "tipo": "ejercicio",
+      "descripcion": "Remo en máquina ergométrica.",
+      "categoria": "cardio"
+    },
+    {
+      "id": 14,
+      "nombre": "Running",
+      "tipo": "ejercicio",
+      "descripcion": "Carrera a distintas distancias.",
+      "categoria": "cardio"
+    },
+    {
+      "id": 15,
+      "nombre": "Wall Ball",
+      "tipo": "ejercicio",
+      "descripcion": "Sentadilla con lanzamiento de balón medicinal a la pared.",
+      "categoria": "gimnástico"
+    },
+    {
+      "id": 16,
+      "nombre": "Kettlebell Swing",
+      "tipo": "ejercicio",
+      "descripcion": "Balanceo explosivo de pesa rusa desde entre las piernas hasta sobre la cabeza.",
+      "categoria": "levantamiento"
+    }
+  ],
+
+  "wods": [
+    {
+      "id": 201,
+      "dia": "Lunes",
+      "tiempo": "12:00 min"
+    },
+    {
+      "id": 202,
+      "dia": "Martes",
+      "tiempo": "12:00 min"
+    },
+    {
+      "id": 203,
+      "dia": "Miércoles",
+      "tiempo": "12:00 min"
+    },
+    {
+      "id": 204,
+      "dia": "Jueves",
+      "tiempo": "12:00 min"
+    },
+    {
+      "id": 205,
+      "dia": "Viernes",
+      "tiempo": "12:00 min"
+    }
+  ]
+}

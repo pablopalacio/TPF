@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "nombre": "Admin",
+    "apellido": "Principal",
+    "email": "admin@mail.com",
+    "password": "1234",
+    "role": "admin",
+    "horario": ""
+  },
+  {
+    "id": 2,
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "email": "juan@mail.com",
+    "password": "1234",
+    "edad": 25,
+    "altura": 175,
+    "peso": 70,
+    "telefono": "+54 9 11 1234-5678",
+    "objetivo": "Ganar masa muscular",
+    "foto": null,
+    "role": "alumno",
+    "horario": ""
+  },
+  {
+    "id": 3,
+    "nombre": "María",
+    "apellido": "Gómez",
+    "email": "maria@mail.com",
+    "password": "1234",
+    "edad": 22,
+    "altura": 165,
+    "peso": 60,
+    "telefono": "+54 9 11 9876-5432",
+    "objetivo": "Bajar peso",
+    "foto": null,
+    "role": "alumno",
+    "horario": ""
+  }
+]

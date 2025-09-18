@@ -1,117 +1,96 @@
 import { useState } from "react";
+import { auth, db } from "../libs/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
-function CrearUsuarioCard({ onCancel }) {
-  const [form, setForm] = useState({
-    nombre: "",
-    apellido: "",
-    edad: "",
-    peso: "",
-    altura: "",
-    email: "",
-    telefono: "",
-    objetivo: "",
-    rol: "",
-  });
+function CrearUsuarioCard({ onCancel, refreshUsers }) {
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleCrear = () => {
-    // Aquí iría lógica para crear usuario (validaciones, fetch, etc.)
-    console.log("Usuario creado:", form);
-    onCancel(); // cerrar formulario tras crear
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const {
+      email,
+      password,
+      nombre,
+      apellido,
+      edad,
+      peso,
+      altura,
+      telefono,
+      objetivo,
+      rol
+    } = data;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        nombre,
+        apellido,
+        edad: Number(edad),
+        peso: Number(peso),
+        altura: Number(altura),
+        telefono,
+        objetivo,
+        rol: rol?.toLowerCase() || "alumno",
+        email,
+        horario: "",
+      });
+
+      // Cierra el modal
+      onCancel();
+
+      // Actualiza la lista de usuarios en PanelAdmin
+      if (refreshUsers) refreshUsers();
+
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      setError("No se pudo crear el usuario.");
+    }
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow-md max-w-md">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded shadow-md max-w-md"
+    >
       <h2 className="text-xl font-semibold mb-4">Crear Usuario</h2>
       <div className="grid grid-cols-1 gap-4">
-        <input
-          name="nombre"
-          placeholder="Nombre*"
-          value={form.nombre}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded"
-        />
-        <input
-          name="apellido"
-          placeholder="Apellido*"
-          value={form.apellido}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded"
-        />
-        <input
-          name="edad"
-          placeholder="Edad"
-          value={form.edad}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          name="peso"
-          placeholder="Peso"
-          value={form.peso}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          name="altura"
-          placeholder="Altura"
-          value={form.altura}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          name="email"
-          placeholder="Email*"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded"
-        />
-        <input
-          name="telefono"
-          placeholder="Teléfono"
-          value={form.telefono}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          name="objetivo"
-          placeholder="Objetivo"
-          value={form.objetivo}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          name="rol"
-          placeholder="Rol*"
-          value={form.rol}
-          onChange={handleChange}
-          required
-          className="p-2 border rounded"
-        />
+        <input name="nombre" placeholder="Nombre*" required className="p-2 border rounded" />
+        <input name="apellido" placeholder="Apellido*" required className="p-2 border rounded" />
+        <input name="edad" placeholder="Edad" className="p-2 border rounded" />
+        <input name="peso" placeholder="Peso" className="p-2 border rounded" />
+        <input name="altura" placeholder="Altura" className="p-2 border rounded" />
+        <input name="email" type="email" placeholder="Email*" required className="p-2 border rounded" />
+        <input name="password" type="password" placeholder="Contraseña*" required className="p-2 border rounded" />
+        <input name="telefono" placeholder="Teléfono" className="p-2 border rounded" />
+        <input name="objetivo" placeholder="Objetivo" className="p-2 border rounded" />
+        <input name="rol" placeholder="Rol*" required className="p-2 border rounded" />
       </div>
+
+      {error && <p className="text-red-500 mt-2">{error}</p>}
 
       <div className="mt-4 flex justify-between">
         <button
-          onClick={handleCrear}
+          type="submit"
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Crear
         </button>
         <button
+          type="button"
           onClick={onCancel}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Cancelar
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

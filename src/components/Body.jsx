@@ -35,12 +35,6 @@ export default function Body() {
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/80 to-indigo-700/60"></div>
         
         <div className="px-4 mx-auto max-w-screen-xl text-center py-16 relative z-10">
-          <div className="mb-8 flex justify-center">
-            <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <i className="fas fa-dumbbell text-white text-3xl"></i>
-            </div>
-          </div>
-          
           <h1 className="mb-6 text-4xl font-bold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
             Transforma tu cuerpo, <span className="text-pink-400">transforma tu vida</span>
           </h1>

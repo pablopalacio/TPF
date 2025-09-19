@@ -6,42 +6,86 @@ function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full bg-black text-white p-7 flex items-center justify-center z-50">
-        <h1 className="text-xl font-bold mx-auto text-center w-full sm:w-auto">
-          La Logia Box
-        </h1>
+      <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-indigo-700 to-indigo-600 text-white p-4 flex items-center justify-between shadow-lg z-50">
+        <div className="flex items-center">
+          <i className="fas fa-dumbbell text-2xl text-white mr-3"></i>
+          <h1 className="text-xl font-bold">La Logia Box</h1>
+        </div>
 
-        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+        <div className="hidden md:flex items-center space-x-4">
+          <a
+            href="/"
+            className="px-3 py-2 text-white hover:text-indigo-200 transition font-medium"
+          >
+            Home
+          </a>
+          <a
+            href="/quienes-somos"
+            className="px-3 py-2 text-white hover:text-indigo-200 transition font-medium"
+          >
+            Quienes Somos
+          </a>
+          <a
+            href="/vision"
+            className="px-3 py-2 text-white hover:text-indigo-200 transition font-medium"
+          >
+            Visión
+          </a>
+          <a
+            href="/turnos"
+            className="px-3 py-2 text-white hover:text-indigo-200 transition font-medium"
+          >
+            Turnos
+          </a>
+          <a
+            href="/login"
+            className="px-3 py-2 bg-white text-indigo-700 rounded-lg font-medium hover:bg-indigo-100 transition"
+          >
+            Login
+          </a>
+        </div>
+
+        <div className="md:hidden">
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="p-2 bg-gray-800 text-white rounded-md focus:outline-none"
+            className="p-2 bg-indigo-800 text-white rounded-lg focus:outline-none hover:bg-indigo-900 transition"
             aria-label="Abrir menú"
           >
-            &#9776;
+            <i className="fas fa-bars text-xl"></i>
           </button>
         </div>
       </header>
 
       {/* Espaciador para el header fijo */}
-      <div className="h-20" />
+      <div className="h-16" />
 
-      {/* Menú hamburguesa solo ocupa su contenido */}
-{menuOpen && (
-  <div className="fixed top-8 right-0 z-40 flex justify-end">
-    <div className="w-64 sm:w-80 h-full bg-black text-amber-50 shadow-lg p-4 pointer-events-auto transition-transform duration-300 ease-in-out">
-      <div className="flex justify-end">
-        <button
-          onClick={() => setMenuOpen(false)}
-          className="text-gray-500 text-3xl hover:text-red-500"
-          aria-label="Cerrar menú"
-        >
-          &times;
-        </button>
-      </div>
-      <MenuHamburguesa onNavigate={() => setMenuOpen(false)} />
-    </div>
-  </div>
-)}
+      {/* Menú hamburguesa */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 flex justify-end md:hidden">
+          {/* Fondo oscuro semitransparente */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={() => setMenuOpen(false)}
+          ></div>
+          
+          {/* Panel del menú */}
+          <div className="relative w-4/5 max-w-sm h-full bg-gradient-to-b from-indigo-800 to-indigo-700 text-white shadow-xl transform transition-transform duration-300 ease-in-out pointer-events-auto">
+            <div className="p-4 flex justify-between items-center border-b border-indigo-600">
+              <h2 className="text-xl font-bold">Menú</h2>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="text-white text-2xl hover:text-indigo-200 transition"
+                aria-label="Cerrar menú"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="p-4">
+              <MenuHamburguesa onNavigate={() => setMenuOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

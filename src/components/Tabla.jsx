@@ -1,41 +1,28 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../libs/firebase";
 import ModalAlumno from "./ModalAlumno";
 
-function Tabla({ tipo, horario, usuarios }) {
+function Tabla({ tipo, horario, usuarios, refreshUsers }) {
   const [datos, setDatos] = useState([]);
   const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
 
   useEffect(() => {
-    const obtenerUsuarios = async () => {
-      try {
-        let alumnos = [];
+    let alumnos = [];
+    if (usuarios && usuarios.length > 0) {
+      alumnos = usuarios.filter(u => tipo === "alumnos" ? u.rol === "alumno" : true);
+    }
+    if (horario) {
+      alumnos = alumnos.filter(a => a.horario === horario);
+    }
+    setDatos(alumnos);
+  }, [usuarios, tipo, horario]);
 
-        if (usuarios && usuarios.length > 0) {
-          alumnos = usuarios.filter(u => tipo === "alumnos" ? u.rol === "alumno" : true);
-        } else {
-          const querySnapshot = await getDocs(collection(db, "users"));
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            if (tipo === "alumnos" && data.rol === "alumno") {
-              alumnos.push({ id: doc.id, ...data });
-            }
-          });
-        }
-
-        if (horario) {
-          alumnos = alumnos.filter(a => a.horario === horario);
-        }
-
-        setDatos(alumnos);
-      } catch (error) {
-        console.error("Error al obtener usuarios:", error);
-      }
-    };
-
-    obtenerUsuarios();
-  }, [tipo, horario, usuarios]);
+  // Mantener alumnoSeleccionado actualizado
+  useEffect(() => {
+    if (alumnoSeleccionado) {
+      const actualizado = datos.find(a => a.id === alumnoSeleccionado.id);
+      if (actualizado) setAlumnoSeleccionado(actualizado);
+    }
+  }, [datos]);
 
   return (
     <div className="bg-white rounded shadow overflow-x-auto">
@@ -70,6 +57,7 @@ function Tabla({ tipo, horario, usuarios }) {
         <ModalAlumno
           alumno={alumnoSeleccionado}
           onClose={() => setAlumnoSeleccionado(null)}
+          refreshUsers={refreshUsers} // 👈 pasar función de refresco al modal
         />
       )}
     </div>

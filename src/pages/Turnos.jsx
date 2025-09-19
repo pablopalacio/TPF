@@ -56,17 +56,22 @@ function Turnos() {
   };
 
   const renderBloque = (bloque, nombreBloque) => (
-    <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
-      <h2 className="text-xl font-semibold mb-4 text-center">{nombreBloque}</h2>
-      <div className="space-y-3">
+    <div className="bg-white/90 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg md:shadow-xl w-full max-w-md mx-auto">
+      <div className="text-center mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-2">{nombreBloque}</h2>
+        <div className="w-16 sm:w-20 h-1 bg-indigo-600 mx-auto rounded-full"></div>
+      </div>
+      <div className="space-y-3 sm:space-y-4">
         {turnos[bloque].map((t, i) => (
           <div
             key={i}
             onClick={() => abrirModal(bloque, i)}
-            className="flex justify-between items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition"
+            className="flex justify-between items-center p-3 sm:p-4 bg-indigo-50/80 rounded-lg sm:rounded-xl border border-indigo-100 cursor-pointer hover:bg-indigo-100/80 transition-all duration-300"
           >
-            <span className="text-lg font-medium">{t.hora}</span>
-            <span className="text-sm text-gray-600 ml-6">{t.reservados}/15</span>
+            <span className="text-base sm:text-lg font-medium text-indigo-900">{t.hora}</span>
+            <span className={`text-xs sm:text-sm font-semibold ${t.reservados < 15 ? 'text-indigo-600' : 'text-red-500'}`}>
+              {t.reservados}/15
+            </span>
           </div>
         ))}
       </div>
@@ -74,58 +79,88 @@ function Turnos() {
   );
 
   return (
-    <div className="min-h-screen bg-pink-500 flex flex-col">
+    <div className="min-h-screen bg-[url('assets/tf2.jpg')] bg-no-repeat bg-cover bg-fixed bg-[center_35%] flex flex-col">
+      {/* Overlay para mejorar la legibilidad */}
+      <div className="absolute inset-0 z-0 bg-black/30"></div>
+
+      {/* Header funcional */}
       <Header />
 
-      <main className="flex-1 py-10 flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-8 text-white">Turnos Disponibles</h1>
+      {/* Contenido principal */}
+      <main className="flex justify-center items-center px-3 sm:px-4 py-10 sm:py-12 md:py-16 flex-grow relative z-10">
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl max-w-6xl w-full p-4 sm:p-6 md:p-8 lg:p-12 mx-2 sm:mx-4">
+          <div className="text-center mb-6 sm:mb-8 md:mb-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-800 mb-2">
+              Turnos Disponibles
+            </h1>
+            <div className="w-16 sm:w-20 md:w-24 h-1 bg-indigo-600 mx-auto rounded-full mb-3 sm:mb-4"></div>
+            <p className="text-sm sm:text-base text-gray-700 max-w-2xl mx-auto">
+              Reservá tu turno para entrenar. Seleccioná el horario que más te convenga y completá tus datos.
+            </p>
+          </div>
 
-        <div className="flex flex-col md:flex-row gap-10">
-          {renderBloque("manana", "Turno Mañana")}
-          {renderBloque("tarde", "Turno Tarde")}
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-10 justify-center">
+            {renderBloque("manana", "Turno Mañana")}
+            {renderBloque("tarde", "Turno Tarde")}
+          </div>
         </div>
       </main>
 
-      <Footer />
+      <footer className="bg-indigo-800 text-white relative z-10">
+        <Footer />
+      </footer>
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-3 sm:p-4">
+          <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
             {/* Botón cerrar */}
             <button
               onClick={cerrarModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute top-2 sm:top-3 right-2 sm:right-3 text-gray-500 hover:text-indigo-800 text-xl bg-indigo-100 rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center"
             >
               ×
             </button>
 
-            <h2 className="text-xl font-semibold mb-4">
-              Turno de{" "}
-              {turnos[selectedTurno.bloque][selectedTurno.index].hora}
-            </h2>
+            <div className="text-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-2">
+                Reservar Turno
+              </h2>
+              <div className="w-12 sm:w-16 h-1 bg-indigo-600 mx-auto rounded-full"></div>
+              <p className="mt-3 sm:mt-4 text-base sm:text-lg font-medium text-gray-800">
+                {turnos[selectedTurno.bloque][selectedTurno.index].hora}
+              </p>
+            </div>
 
-            <label className="block mb-2 text-gray-700">Nombre</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full p-2 mb-4 border rounded"
-            />
+            <div className="space-y-3 sm:space-y-4">
+              <div>
+                <label className="block mb-1 sm:mb-2 text-sm sm:text-base text-gray-700 font-medium">Nombre</label>
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Ingresá tu nombre"
+                />
+              </div>
 
-            <label className="block mb-2 text-gray-700">Apellido</label>
-            <input
-              type="text"
-              value={apellido}
-              onChange={(e) => setApellido(e.target.value)}
-              className="w-full p-2 mb-4 border rounded"
-            />
+              <div>
+                <label className="block mb-1 sm:mb-2 text-sm sm:text-base text-gray-700 font-medium">Apellido</label>
+                <input
+                  type="text"
+                  value={apellido}
+                  onChange={(e) => setApellido(e.target.value)}
+                  className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Ingresá tu apellido"
+                />
+              </div>
+            </div>
 
             <button
               onClick={reservarTurno}
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
+              className="w-full bg-indigo-600 text-white p-2 sm:p-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 mt-4 sm:mt-6 font-semibold text-base sm:text-lg"
             >
-              Reservar
+              Confirmar Reserva
             </button>
           </div>
         </div>

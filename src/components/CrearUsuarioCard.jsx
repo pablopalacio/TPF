@@ -73,44 +73,44 @@ function CrearUsuarioCard({ onCancel, refreshUsers }) {
       onSubmit={handleSubmit}
       className="bg-white p-6 rounded shadow-md max-w-md">
       <h2 className="text-xl font-semibold mb-4">Crear Usuario</h2>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-4 gap-1">
         <input
           name="nombre"
           placeholder="Nombre*"
           required
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="apellido"
           placeholder="Apellido*"
           required
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
-        <input name="edad" placeholder="Edad" className="p-2 border rounded" />
-        <input name="peso" placeholder="Peso" className="p-2 border rounded" />
+        <input name="edad" placeholder="Edad" className="p-1 border rounded" />
+        <input name="peso" placeholder="Peso" className="p-1 border rounded" />
         <input
           name="altura"
           placeholder="Altura"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="email"
           type="email"
           placeholder="Email*"
           required
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="password"
           type="password"
           placeholder="Contraseña*"
           required
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="telefono"
           placeholder="Teléfono"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="objetivo"
@@ -128,12 +128,12 @@ function CrearUsuarioCard({ onCancel, refreshUsers }) {
         <input
           name="pressBranch"
           placeholder="Press Branch"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="frontSquat"
           placeholder="Front Squat"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="backSquat"
@@ -143,22 +143,22 @@ function CrearUsuarioCard({ onCancel, refreshUsers }) {
         <input
           name="deadlift"
           placeholder="Deadlift"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="snatch"
           placeholder="Snatch"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="cleen"
           placeholder="Cleen"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
         <input
           name="cleenAndJerk"
           placeholder="Cleen & Jerk"
-          className="p-2 border rounded"
+          className="p-1 border rounded"
         />
       </div>
 
